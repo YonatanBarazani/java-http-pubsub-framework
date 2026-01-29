@@ -1,146 +1,165 @@
-Java HTTP Pub/Sub Framework
+# Java HTTP Pub/Sub Framework
 
-A lightweight HTTP server and publish–subscribe framework written in pure Java, without external libraries.
+A lightweight HTTP server and publish–subscribe framework written in **pure Java**.
 
-This project demonstrates low-level understanding of:
+This project demonstrates low-level understanding of HTTP, sockets, concurrency, and modular server design — **without using frameworks** such as Spring, Jetty, or external libraries.
 
-HTTP over raw sockets
+---
 
-Request parsing
+## ✨ Features
 
-Concurrency and threading
+- Custom HTTP server implementation (Java sockets)
+- Manual HTTP request parsing
+- REST-style GET endpoints
+- Publish–Subscribe messaging model
+- Thread-safe topic management
+- Pluggable processing agents (sum, increment, multiplication, parallel)
+- JSON responses (manual serialization)
+- No external dependencies
 
-REST-style API design
+---
 
-Modular server architecture
+## 📦 Project Structure
 
-The entire system is built from scratch for educational and demonstrational purposes.
-
-Features
-
-Custom HTTP server implementation (no frameworks)
-
-Manual HTTP request parsing
-
-URI prefix–based servlet routing
-
-REST-style GET endpoints
-
-Publish–Subscribe messaging system
-
-Thread-safe topic management
-
-Pluggable processing agents:
-
-Sum
-
-Increment
-
-Multiplication
-
-Parallel processing
-
-JSON responses (manual serialization)
-
-Zero external dependencies
-
-Project Structure
+```
 java-http-pubsub-framework/
-│
 ├─ src/
 │  └─ main/
 │     └─ java/
-│        ├─ server/        # HTTP server & request parser
-│        ├─ servlets/      # REST endpoints
-│        ├─ pubsub/        # Topics & messages
-│        ├─ agents/        # Processing agents
-│        └─ demo/          # Application entry point
-│
-├─ out/                    # Compiled classes (gitignored)
-├─ sources.txt             # Java source list (optional)
+│        ├─ server/     # HTTP server & request parser
+│        ├─ servlets/   # REST endpoints
+│        ├─ pubsub/     # Topics & messages
+│        ├─ agents/     # Processing agents
+│        └─ demo/       # Application entry point
+├─ out/                # Compiled classes (gitignored)
+├─ pom.xml             # Maven project descriptor (no dependencies)
 └─ README.md
+```
 
-API
-Publish a value
-GET /publish?topic=A&message=5
+---
 
+## 🚀 Running the Project
 
-(also supports value instead of message)
+### Compile
 
-Response
+#### Windows (PowerShell)
+```powershell
+javac -encoding UTF-8 -d out (Get-ChildItem -Recurse src/main/java -Filter *.java | ForEach-Object { $_.FullName })
+```
 
-{"status":"ok","topic":"A","value":5.0}
+#### Linux / macOS
+```bash
+javac -encoding UTF-8 -d out $(find src/main/java -name "*.java")
+```
 
-Topic statistics
-GET /stats?topic=SUM
+### Run
+```bash
+java -cp out demo.Main
+```
 
+The server will start at:
 
-Response
-
-{"topic":"SUM","messages":1}
-
-List all topics
-GET /topics
-
-
-Response
-
-{"topics":["A","B","SUM","SUM_PLUS_ONE","MUL"]}
-
-Running the Project
-Requirements
-
-Java 21+
-
-Compile (Windows PowerShell)
-Remove-Item -Recurse -Force out -ErrorAction SilentlyContinue
-New-Item -ItemType Directory out | Out-Null
-
-$files = Get-ChildItem -Recurse -Filter *.java src\main\java | ForEach-Object { $_.FullName }
-$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
-[System.IO.File]::WriteAllLines("sources.txt", $files, $utf8NoBom)
-
-cmd /c "javac -encoding UTF-8 -d out @sources.txt"
-
-Run
-cmd /c "java -cp out demo.Main"
-
-
-Server will start at:
-
+```
 http://localhost:8080
+```
 
-Example Usage
-(iwr "http://localhost:8080/publish?topic=A&message=5" -UseBasicParsing).Content
-(iwr "http://localhost:8080/stats?topic=SUM" -UseBasicParsing).Content
-(iwr "http://localhost:8080/topics" -UseBasicParsing).Content
+---
 
-Design Notes
+## 🔌 API
 
-No frameworks (Spring, Jetty, etc.) were used intentionally
+### Publish a Value
 
-HTTP handling is implemented directly using sockets
+```
+GET /publish?topic=A&message=5
+```
 
-JSON is built manually to keep full control over output
+(also supports `value` instead of `message`)
 
-Designed to be readable, modular, and extendable
+**Response**
+```json
+{
+  "status": "ok",
+  "topic": "A",
+  "value": 5.0
+}
+```
 
-Servlets can be added or removed without changing the server core
+---
 
-Why This Project
+### Topic Statistics
 
-This project was built to demonstrate:
+```
+GET /stats?topic=SUM
+```
 
-Deep understanding of how HTTP servers work internally
+**Response**
+```json
+{
+  "topic": "SUM",
+  "messages": 1
+}
+```
 
-Ability to design clean APIs without relying on libraries
+---
 
-Concurrency and thread management
+### List All Topics
 
-Practical software architecture in Java
+```
+GET /topics
+```
 
-It is suitable both as an academic project and as a portfolio piece.
+**Response**
+```json
+{
+  "topics": ["A", "B", "SUM", "SUM_PLUS_ONE", "MUL"]
+}
+```
 
-License
+---
 
-Educational / demonstration use.
+## 🧠 Architecture Overview
+
+- **server**  
+  Core HTTP server, socket handling, request parsing, and servlet routing.
+
+- **servlets**  
+  REST-style endpoints (`/publish`, `/stats`, `/topics`).
+
+- **pubsub**  
+  Topic and message management with thread-safe publish/subscribe logic.
+
+- **agents**  
+  Modular message processors (increment, sum, multiplication, parallel execution).
+
+- **demo**  
+  Application bootstrap and wiring.
+
+---
+
+## 🛠 Technologies
+
+- Java 21
+- Maven (structure only, no dependencies)
+- Java Sockets
+- Manual JSON serialization
+
+---
+
+## 📌 Notes
+
+This project was intentionally built **without frameworks** to demonstrate a deep understanding of:
+
+- HTTP protocol fundamentals  
+- Concurrent programming  
+- Server-side architecture  
+- Clean modular design  
+
+It is designed as a **portfolio project** rather than a production framework.
+
+---
+
+## 👤 Author
+
+Yonatan Barazani  
+Computer Science Student  
+GitHub: https://github.com/YonatanBarazani
